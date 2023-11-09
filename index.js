@@ -1,8 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+async function conectarMongoDB () {
+    await mongoose.connect(`mongodb+srv://pro_mac:mongo123@cluster0.skf8n.mongodb.net/?retryWrites=true&w=majority`)
+}
 
 let filmes = [
     {
@@ -37,4 +42,12 @@ app.post ('/filmes', (req, res) => {
     res.send(filmes);
 });
 
-app.listen(3000, () => console.log('app up & running'));
+app.listen(3000, () => {
+    try {
+        conectarMongoDB();
+        console.log('conexão ok e app up & running');
+    }
+    catch (e) {
+        console.log ('erro:', e);
+    }
+});
